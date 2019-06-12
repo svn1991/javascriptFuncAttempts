@@ -1,0 +1,10 @@
+.staticPage-wrapper {
+  background-color: #80ffff;
+  padding: 20px 0;
+  flex-wrap: wrap;
+
+  > div {
+    flex: 1 100%;
+    margin-bottom: 10px;
+  }
+}
