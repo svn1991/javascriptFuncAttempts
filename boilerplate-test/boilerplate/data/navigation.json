@@ -1,0 +1,17 @@
+[
+  {
+    "main": {
+      "name": "Home"
+    },
+    "children": [
+      {
+        "name": "Test",
+        "staticFile": "test.html"
+      },
+      {
+        "name": "Test 2",
+        "staticFile": "test2.html"
+      }
+    ]
+  }
+]

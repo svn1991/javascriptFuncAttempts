@@ -8,17 +8,28 @@ class StaticPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      htmlContent: `<div></<div>`
+      htmlContent: `<div></<div>`,
+      filePath: this.props.filePath,
+      fileName: 'test.html'
     }
   }
 
   componentDidMount() {
-    console.log('mounted')
+    console.log('mounting');
     this.getHTMLContent();
   }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.lang !== this.props.lang) {
+      console.log('yes i will update');
+      return true;
+    }
+    console.log('no i will not update');
+    return false;
+  }
   
-  componentDidUpdate(prevProps) {
-    console.log('updated')  
+  componentDidUpdate(prevProps, prevState) {
+    console.log('updating')
     if (prevProps.lang !== this.props.lang) {
       this.getHTMLContent();
     }
@@ -26,7 +37,7 @@ class StaticPage extends React.Component {
 
   getHTMLContent() {
     const scope = this;
-    axios.get(this.props.filePath)
+    axios.get(this.state.filePath+'./'+this.props.lang+'/'+this.state.fileName)
     .then(response => {
       const htmlContent = DOMpurify.sanitize(response.data);
       this.setState({htmlContent});
@@ -47,7 +58,7 @@ class StaticPage extends React.Component {
       <div className="staticPage-wrapper center-content">
         <div 
           id="static-page-content" 
-          className="external-html"
+          className={"external-html" + this.state.lang}
           dangerouslySetInnerHTML={this.createMarkup()}
         />
       </div>

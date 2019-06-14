@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
@@ -11,7 +11,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lang: 'en'
+      lang: 'en',
+      staticPath: process.env.PUBLIC_URL + '/staticHtmlPages/',
+      currentPage: 'test.html'
     }
   }
 
@@ -22,10 +24,9 @@ class App extends React.Component {
   }
 
   render() {
-
     const staticPageProps = {
-      filePath: process.env.PUBLIC_URL + '/staticHtmlPages/',
-      fileName: 'test.html',
+      filePath: this.state.staticPath,
+      fileName: this.state.currentPage,
       lang: this.state.lang,
       switchLang: (lang) => this.switchLang(lang)
     }
@@ -34,12 +35,17 @@ class App extends React.Component {
       <Router>
         <div className="App">
           <Header />
-          <Route
-            path={'/:lang/:fileName'}
-            render={(routeProps) => (
-              <StaticPage {...routeProps} {...staticPageProps} />
-            )}
-          />
+          <Switch>
+            <Route exact path="/" render={() => (
+                <Redirect to={'/'+this.state.lang+'/'+this.state.currentPage} />
+            )}/>
+            <Route
+              path={'/:lang?/:fileName'}
+              render={(routeProps) => (
+                <StaticPage {...routeProps} {...staticPageProps} switchLang={(lang) => this.switchLang(lang)} />
+              )}
+            />
+          </Switch>
           <Footer switchLang={(lang) => this.switchLang(lang)}/>
         </div>
       </Router>
